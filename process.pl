@@ -3,33 +3,40 @@
 use strict;
 use warnings;
 use autodie qw(open close);
-use Carp qw(croak);
-use 5.012;
-
-my $template_file="template";
-my $h_data_file="h_data";
-
-open my $fh2, '<', $h_data_file;
 
 
-while(<$fh2>){
-	my ($h11,$h21,$h22,$h33)=split ' ', $_;
-	substitute($h11,$h21,$h22,$h33); # no need for & here
-	#say $h11,$h21,$h22,$h33;
+my $template_file = "template";
+my $h_data_file   = "h_data";
+
+# call subroutine open_n_work with parameters:
+# a file, and an anonymous subroutine 
+open_n_work(
+    $h_data_file,
+    sub {  # anonymous subroutine
+        my @h_data = split;
+        substitute( \@h_data );
+    }
+);
+
+sub open_n_work {
+    my ( $file, $coderef ) = @_;
+    open my $fh, '<', $file;
+    while (<$fh>) {
+        chomp;
+        $coderef->($_);
+    }
 }
- 
-close $fh2;
- 
-sub substitute{
-	my($h11,$h21,$h22,$h33)=@_;
-	open my $fh1, '<', $template_file;
 
-	while(<$fh1>){
-		s/\$h11/$h11/g;	
-		s/\$h21/$h21/g;	
-		s/\$h22/$h22/g;
-		s/\$h33/$h33/g;
-		print $_;
-	};
-		
+sub substitute {
+    my ($h_data_ref) = @_;
+    open my $fh, '<', $template_file;
+
+    while (<$fh>) {
+        s/\$h11/$h_data_ref->[0]/g;
+        s/\$h21/$h_data_ref->[1]/g;
+        s/\$h22/$h_data_ref->[2]/g;
+        s/\$h33/$h_data_ref->[3]/g;
+        print $_;
+    }
+
 }
