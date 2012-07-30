@@ -14,7 +14,7 @@ open my $fh2, '<', $h_data_file;
 
 while(<$fh2>){
 	my ($h11,$h21,$h22,$h33)=split ' ', $_;
-	&substitute($h11,$h21,$h22,$h33);
+	substitute($h11,$h21,$h22,$h33); # no need for & here
 	#say $h11,$h21,$h22,$h33;
 }
 
