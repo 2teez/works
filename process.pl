@@ -17,7 +17,9 @@ while(<$fh2>){
 	substitute($h11,$h21,$h22,$h33); # no need for & here
 	#say $h11,$h21,$h22,$h33;
 }
-
+ 
+close $fh2;
+ 
 sub substitute{
 	my($h11,$h21,$h22,$h33)=@_;
 	open my $fh1, '<', $template_file;
